@@ -9,6 +9,7 @@ A React Native mobile app to help make cooking easier for home chefs
 
 ```
 npm install
+expo install
 expo start
 ```
 
