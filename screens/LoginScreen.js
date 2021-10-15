@@ -1,96 +1,165 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/core";
+
 import {
-  KeyboardAvoidingView,
   StyleSheet,
-  Text,
-  TextInput,
+  Platform,
+  TouchableHighlight,
   TouchableOpacity,
-  View,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
+import {
+  Center,
+  Heading,
+  KeyboardAvoidingView,
+  Text,
+  Input,
+  View,
+  VStack,
+  HStack,
+} from "native-base";
+import { auth } from "../firebase";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigation = useNavigation();
+
+  // login listener, if logged in navigate to home screen
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.navigate("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
+
+  const handleSignUp = () => {
+    console.log(auth);
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user.email, "Signed up");
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  const handleLogin = () => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user.email, "Logged in");
+        navigation.navigate("Home");
+      })
+      .catch((error) => alert(error.message));
+  };
+
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => {}} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {}}
-          style={[styles.button, styles.buttonOutline]}
-        >
-          <Text style={styles.buttonOutlineText}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+    <Center flex={1} px="3">
+      <KeyboardAvoidingView
+        h={"400px"}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <VStack p="6" flex="1" justifyContent="flex-end">
+            <Heading fontSize={36} mb="3">
+              Welcome to Recipe Hero
+            </Heading>
+            <Text>Please login or sign up</Text>
+            <View>
+              <Input
+                placeholder="Email"
+                mt="5"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+              <Input
+                placeholder="Password"
+                mt="5"
+                mb="4"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                secureTextEntry
+              />
+            </View>
+            <HStack>
+              <TouchableHighlight
+                activeOpacity={0.9}
+                underlayColor="#666"
+                onPress={handleLogin}
+                style={styles.button}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </TouchableHighlight>
+              <TouchableOpacity
+                onPress={handleSignUp}
+                style={[styles.button, styles.buttonOutline]}
+              >
+                <Text style={styles.buttonOutlineText}>Sign up</Text>
+              </TouchableOpacity>
+            </HStack>
+          </VStack>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </Center>
   );
 };
 
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  inputContainer: {
-    width: "80%",
-  },
-  input: {
-    backgroundColor: "white",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginTop: 5,
-  },
+  //   container: {
+  //     flex: 1,
+  //   },
+  //   innerContainer: {
+  //     padding: 24,
+  //     flex: 1,
+  //     justifyContent: "space-around",
+  //     alignItems: "center",
+  //   },
+
+  //   inputContainer: {
+  //     flex: 2,
+  //     width: "80%",
+  //     justifyContent: "flex-end",
+  //   },
+  //   input: {
+  //     backgroundColor: "white",
+  //     paddingHorizontal: 15,
+  //     paddingVertical: 10,
+  //     borderRadius: 5,
+  //     marginTop: 5,
+  //   },
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
-    width: "80%",
-    maxHeight: "0%",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 40,
+    justifyContent: "space-between",
   },
   button: {
     backgroundColor: "#333",
-    padding: 15,
+    padding: 10,
     borderRadius: 50,
     alignItems: "center",
     width: "45%",
+    margin: 3,
   },
   buttonText: {
     color: "white",
-    fontSize: "16",
+    fontSize: 16,
     fontWeight: "700",
   },
   buttonOutline: {
-    backgroundColor: "white",
-    borderColor: "#333",
-    borderWidth: 3,
+    backgroundColor: "rgba(255,255,255,0.1)",
   },
 
   buttonOutlineText: {
-    fontSize: "16",
+    fontSize: 16,
     fontWeight: "700",
   },
 });
