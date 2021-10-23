@@ -20,6 +20,11 @@ import {
   HStack,
 } from "native-base";
 import { auth } from "../firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -39,8 +44,8 @@ const LoginScreen = () => {
 
   const handleSignUp = () => {
     console.log(auth);
-    auth
-      .createUserWithEmailAndPassword(email, password)
+
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user.email, "Signed up");
@@ -49,8 +54,7 @@ const LoginScreen = () => {
   };
 
   const handleLogin = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user.email, "Logged in");

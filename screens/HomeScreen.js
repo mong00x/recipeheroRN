@@ -4,23 +4,25 @@ import { Center, VStack, HStack, Heading, Text } from "native-base";
 
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
-import { database } from "../firebase";
+import { signOut } from "@firebase/auth";
 
 import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const user = auth.currentUser;
+
   const handleSignOut = () => {
-    auth.signOut().then(() => {
+    signOut(auth).then(() => {
       console.log(user.email, "Signed out");
       navigation.replace("Login");
     });
   };
 
   return (
-    <SafeAreaView>
-      <Center flex={1} px="3">
+    <Center flex={1} px="3">
+      <SafeAreaView>
         <VStack flex="1" justifyContent="space-around">
           <Heading>Hi,{auth.currentUser?.email}</Heading>
           <TouchableOpacity style={[styles.button]} onPress={handleSignOut}>
@@ -28,8 +30,8 @@ const HomeScreen = () => {
             <Ionicons name="log-out-outline" size={36} color="white" />
           </TouchableOpacity>
         </VStack>
-      </Center>
-    </SafeAreaView>
+      </SafeAreaView>
+    </Center>
   );
 };
 
