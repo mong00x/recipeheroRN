@@ -4,27 +4,32 @@ import { Center, VStack, HStack, Heading, Text } from "native-base";
 
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
+import { database } from "../firebase";
 
 import { useNavigation } from "@react-navigation/core";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const handleSignOut = () => {
     auth.signOut().then(() => {
+      console.log(user.email, "Signed out");
       navigation.replace("Login");
     });
   };
 
   return (
-    <Center flex={1} px="3">
-      <VStack flex="1" justifyContent="space-around">
-        <Heading>Hi,{auth.currentUser?.email}</Heading>
-        <TouchableOpacity style={[styles.button]} onPress={handleSignOut}>
-          <Text style={styles.buttonText}>Sign out</Text>
-          <Ionicons name="log-out-outline" size={36} color="white" />
-        </TouchableOpacity>
-      </VStack>
-    </Center>
+    <SafeAreaView>
+      <Center flex={1} px="3">
+        <VStack flex="1" justifyContent="space-around">
+          <Heading>Hi,{auth.currentUser?.email}</Heading>
+          <TouchableOpacity style={[styles.button]} onPress={handleSignOut}>
+            <Text style={styles.buttonText}>Sign out</Text>
+            <Ionicons name="log-out-outline" size={36} color="white" />
+          </TouchableOpacity>
+        </VStack>
+      </Center>
+    </SafeAreaView>
   );
 };
 
@@ -39,7 +44,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
-    width: "85%",
     maxHeight: 40,
     marginTop: 10,
   },
@@ -47,6 +51,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "700",
-    width: "60%",
   },
 });
