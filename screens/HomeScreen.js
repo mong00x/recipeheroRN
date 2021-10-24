@@ -4,7 +4,9 @@ import { Center, VStack, HStack, Heading, Text } from "native-base";
 
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
-import { signOut } from "@firebase/auth";
+import { signOut } from "firebase/auth";
+import { database } from "../firebase";
+import { ref, child, get, set } from "firebase/database";
 
 import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +22,25 @@ const HomeScreen = () => {
     });
   };
 
+  const dbRef = ref(database);
+  get(child(dbRef, "Hello"))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        console.log(snapshot.val());
+      } else {
+        console.log("No data available");
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+  const addData = (IngredientId = 0, IngredientName = "banana") => {
+    set(ref(database, "Hello/"), {
+      ingredientName: IngredientName,
+    });
+  };
+
   return (
     <Center flex={1} px="3">
       <SafeAreaView>
@@ -28,6 +49,9 @@ const HomeScreen = () => {
           <TouchableOpacity style={[styles.button]} onPress={handleSignOut}>
             <Text style={styles.buttonText}>Sign out</Text>
             <Ionicons name="log-out-outline" size={36} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button]} onPress={addData}>
+            <Ionicons name="add-circle-outline" size={36} color="white" />
           </TouchableOpacity>
         </VStack>
       </SafeAreaView>
