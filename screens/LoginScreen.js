@@ -20,11 +20,11 @@ import {
   HStack,
 } from "native-base";
 import { auth } from "../firebase";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
+// import {
+//   signInWithEmailAndPassword,
+//   createUserWithEmailAndPassword,
+//   onAuthStateChanged,
+// } from "firebase/auth";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
