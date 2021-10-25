@@ -1,42 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Center, VStack, HStack, Heading, Text } from "native-base";
+import { Center, VStack, HStack, Heading, Text, View } from "native-base";
 
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
 import { database } from "../firebase";
-import { ref, child, get, set } from "firebase/database";
 
 import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreen = () => {
+  const [name, setName] = useState();
+  const dbRef = database.ref("hello/");
+  console.log(dbRef);
+
   const navigation = useNavigation();
   const user = auth.currentUser;
 
+  useEffect(() => {
+    const getData = async () => {
+      await dbRef.once("value").then((snap) => {
+        const data = snap.val();
+        updateData(data);
+      });
+    };
+    getData();
+  }, []);
+
+  const updateData = (data) => {
+    const D = data;
+    console.log(D);
+  };
+
   const handleSignOut = () => {
-    signOut(auth).then(() => {
+    auth.signOut().then(() => {
       console.log(user.email, "Signed out");
       navigation.replace("Login");
     });
   };
 
-  const dbRef = ref(database);
-  get(child(dbRef, "Hello"))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        console.log(snapshot.val());
-      } else {
-        console.log("No data available");
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  const addList = () => {
+    navigation.replace("ShopList");
+  };
 
-  const addData = (IngredientId = 0, IngredientName = "banana") => {
-    set(ref(database, "Hello/"), {
+  const addData = (ingredientName = "Meat") => {
+    set(ref(database, "shopList/"), {
       ingredientName: IngredientName,
     });
   };
@@ -45,14 +54,28 @@ const HomeScreen = () => {
     <Center flex={1} px="3">
       <SafeAreaView>
         <VStack flex="1" justifyContent="space-around">
-          <Heading>Hi,{auth.currentUser?.email}</Heading>
-          <TouchableOpacity style={[styles.button]} onPress={handleSignOut}>
-            <Text style={styles.buttonText}>Sign out</Text>
-            <Ionicons name="log-out-outline" size={36} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.button]} onPress={addData}>
-            <Ionicons name="add-circle-outline" size={36} color="white" />
-          </TouchableOpacity>
+          <HStack>
+            <Heading>Hi,{auth.currentUser?.email}</Heading>
+            <TouchableOpacity style={[styles.button]} onPress={handleSignOut}>
+              <Text style={styles.buttonText}>Sign out</Text>
+              <Ionicons name="log-out-outline" size={36} color="white" />
+            </TouchableOpacity>
+          </HStack>
+
+          {/* {shopList ? (
+            <View>
+              <Text>You have one on-going shopping list</Text>
+              <Center>
+                <TouchableOpacity onPress={addData}>
+                  <Ionicons name="add-circle-outline" size={36} color="#333" />
+                </TouchableOpacity>
+              </Center>
+            </View>
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={addList}>
+              <Text style={styles.buttonText}>Add new Shopping List</Text>
+            </TouchableOpacity>
+          )} */}
         </VStack>
       </SafeAreaView>
     </Center>
@@ -71,7 +94,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     maxHeight: 40,
-    marginTop: 10,
   },
   buttonText: {
     color: "white",
