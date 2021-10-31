@@ -20,11 +20,12 @@ import {
   HStack,
 } from "native-base";
 import { auth } from "../firebase";
-// import {
-//   signInWithEmailAndPassword,
-//   createUserWithEmailAndPassword,
-//   onAuthStateChanged,
-// } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ const LoginScreen = () => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         navigation.navigate("Home");
+        console.log(user);
       }
     });
     return unsubscribe;
@@ -45,7 +47,8 @@ const LoginScreen = () => {
   const handleSignUp = () => {
     console.log(auth);
 
-    createUserWithEmailAndPassword(auth, email, password)
+    auth
+      .createUserWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user.email, "Signed up");
@@ -54,7 +57,8 @@ const LoginScreen = () => {
   };
 
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
+    auth
+      .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(user.email, "Logged in");
@@ -65,51 +69,56 @@ const LoginScreen = () => {
 
   return (
     <Center flex={1} px="3">
-      <KeyboardAvoidingView
-        h={"400px"}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <VStack p="6" flex="1" justifyContent="flex-end">
-            <Heading fontSize={36} mb="3">
-              Welcome to Recipe Hero
-            </Heading>
-            <Text>Please login or sign up</Text>
-            <View>
-              <Input
-                placeholder="Email"
-                mt="5"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-              />
-              <Input
-                placeholder="Password"
-                mt="5"
-                mb="4"
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                secureTextEntry
-              />
-            </View>
-            <HStack>
-              <TouchableHighlight
-                activeOpacity={0.9}
-                underlayColor="#666"
-                onPress={handleLogin}
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>Login</Text>
-              </TouchableHighlight>
-              <TouchableOpacity
-                onPress={handleSignUp}
-                style={[styles.button, styles.buttonOutline]}
-              >
-                <Text style={styles.buttonOutlineText}>Sign up</Text>
-              </TouchableOpacity>
-            </HStack>
-          </VStack>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      <SafeAreaView>
+        <KeyboardAvoidingView
+          h={"400px"}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <TouchableWithoutFeedback
+            onPress={Keyboard.dismiss}
+            accessible={false}
+          >
+            <VStack p="6" flex="1" justifyContent="flex-end">
+              <Heading fontSize={36} mb="3">
+                Welcome to Recipe Hero 🥬
+              </Heading>
+              <Text>Please login or sign up</Text>
+              <View>
+                <Input
+                  placeholder="Email"
+                  mt="5"
+                  value={email}
+                  onChangeText={(text) => setEmail(text)}
+                />
+                <Input
+                  placeholder="Password"
+                  mt="5"
+                  mb="4"
+                  value={password}
+                  onChangeText={(text) => setPassword(text)}
+                  secureTextEntry
+                />
+              </View>
+              <HStack>
+                <TouchableHighlight
+                  activeOpacity={0.9}
+                  underlayColor="#666"
+                  onPress={handleLogin}
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>Login</Text>
+                </TouchableHighlight>
+                <TouchableOpacity
+                  onPress={handleSignUp}
+                  style={[styles.button, styles.buttonOutline]}
+                >
+                  <Text style={styles.buttonOutlineText}>Sign up</Text>
+                </TouchableOpacity>
+              </HStack>
+            </VStack>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </Center>
   );
 };
