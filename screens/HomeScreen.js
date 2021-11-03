@@ -18,7 +18,7 @@ import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import ShoppingList from "../components/ShoppingList";
+import ShoppingList from "../components/ShoppingList/ShoppingList";
 
 const HomeScreen = () => {
   const [shopList, setShopList] = useState(null);
