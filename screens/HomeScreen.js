@@ -14,7 +14,6 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
-import { database } from "../firebase";
 
 import { useNavigation } from "@react-navigation/core";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,16 +26,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const user = auth.currentUser;
 
-  useEffect(() => {
-    const dbRef = database.ref("hello/");
-
-    dbRef.on("value", (snapshot) => {
-      setShopList(snapshot.val());
-    });
-    return () => {
-      dbRef.off();
-    };
-  });
+  useEffect(() => {});
 
   const handleSignOut = () => {
     auth.signOut().then(() => {
@@ -47,12 +37,6 @@ const HomeScreen = () => {
 
   const addList = () => {
     navigation.replace("ShopList");
-  };
-
-  const addData = (ingredientName = "Meat") => {
-    set(ref(database, "shopList/"), {
-      ingredientName: IngredientName,
-    });
   };
 
   return (

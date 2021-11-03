@@ -1,10 +1,11 @@
 {
-    "shopList":[
-        
+    "shopList":
+        [
             {
                 "id":1,
                 "ingredientName":"Carrot",
                 "ingredientQTY":2,
+                "ingredientUnit":"pack",
                 "accquired":false
             },
             {
@@ -12,23 +13,27 @@
                 "id":2,
                 "ingredientName":"Celery",
                 "ingredientQTY":1,
+                "ingredientUnit":"",
                 "accquired":false
             },
             {
                 "id":3,
                 "ingredientName":"Cabbage",
                 "ingredientQTY":2,
+                "ingredientUnit":"",
                 "accquired":false
             },
             {
                 "id":4,
                 "ingredientName":"Milk",
                 "ingredientQTY":1,
+                "ingredientUnit":"box",
                 "accquired":false
             }
         
         ],
-    "storage":[
-        null
-    ]
+    "inventory":[
+            
+        ]
+         
 }

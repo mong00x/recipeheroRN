@@ -33,4 +33,4 @@ console.log(database);
 const auth = firebase.auth();
 console.log(auth);
 
-export { auth, database };
+export { auth };
