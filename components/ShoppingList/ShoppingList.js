@@ -147,9 +147,10 @@ const Shoppinglist = () => {
       {shopList.length > 0 ? (
         // pass function props into shopList component
         <Ingredients
-          Ingredients={shopList}
+          ingredients={[...shopList]}
           onFinish={finishIngredient}
           onDelete={deleteIngredient}
+          a="a"
         />
       ) : (
         "🛒 is empty, click + to add new shopList"
