@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 
 import {
   Box,
+  Checkbox,
   FlatList,
   Heading,
   Avatar,
@@ -16,42 +17,8 @@ import {
 
 const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
   const [error, setError] = useState(null);
-  const [emojis, setEmojis] = useState([]);
-  const [emjIcon, setEmjIcon] = useState("");
+
   const [isLoading, setIsLoading] = useState(true);
-
-  // useEffect(() => {
-  //   fetch(
-  //     "https://emoji-api.com/categories/food-drink?access_key=b6370aa8fa0cae5f52f26ff86be122de40169e6d"
-  //   )
-  //     .then((res) => res.json())
-  //     .then(
-  //       (result) => {
-  //         setEmojis(result);
-  //       },
-  //       // Note: it's important to handle errors here
-  //       // instead of a catch() block so that we don't swallow
-  //       // exceptions from actual bugs in components.
-  //       (error) => {
-  //         setError(error);
-  //       }
-  //     );
-  // }, []);
-
-  // const getEmjIcon = (ingName) => {
-  //   console.log("it runs");
-  //   ingName = ingName.toLowerCase();
-  //   const found = emojis.filter((data) => {
-  //     // console.log(data.slug.match(`\\b${ingName}\\b`));
-  //     var matchRes = data.slug.match(`\\b${ingName}\\b`);
-  //     console.log(matchRes);
-  //     return data.slug == matchRes ? matchRes[0] : null;
-  //   });
-  //   console.log(found);
-  //   if (found.length) {
-  //     return found[0].character;
-  //   }
-  // };
 
   return (
     <Box>
@@ -65,41 +32,49 @@ const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
           borderColor="coolGray.200"
           pl="4"
           pr="5"
-          py="2"
+          py="3"
         >
           <HStack space={3} justifyContent="space-between">
             <VStack>
               <HStack space={3}>
-                {/* <Heading>{getEmjIcon(ingredient.ingredientName)}</Heading> */}
+                <Heading>{ingredient.ingredientIcon}</Heading>
                 <Text
                   _dark={{
                     color: "warmGray.50",
                   }}
                   color="coolGray.800"
+                  fontSize="lg"
                   bold
+                  w={100}
                 >
                   {ingredient.ingredientName}
                 </Text>
                 <Text
-                  color="coolGray.600"
+                  color="coolGray.400"
                   _dark={{
                     color: "warmGray.200",
                   }}
+                  alignSelf="center"
                 >
                   {ingredient.ingredientQTY}
                 </Text>
+                <Text
+                  fontSize="xs"
+                  _dark={{
+                    color: "warmGray.50",
+                  }}
+                  color="coolGray.400"
+                  alignSelf="center"
+                >
+                  {ingredient.ingredientUnit}
+                </Text>
               </HStack>
             </VStack>
-            <Spacer />
-
-            <Text
-              fontSize="xs"
-              _dark={{
-                color: "warmGray.50",
-              }}
-              color="coolGray.800"
-              alignSelf="flex-start"
-            ></Text>
+            <Checkbox
+              value="test"
+              accessibilityLabel="This is a dummy checkbox"
+              size="lg"
+            />
           </HStack>
         </Box>
       ))}

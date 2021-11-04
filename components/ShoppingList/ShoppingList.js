@@ -25,15 +25,51 @@ import Ingredients from "./Ingredients/Ingredients";
 const Shoppinglist = () => {
   const [shopList, setshopList] = useState([...Data["shopList"]]);
   const [ingName, setIngName] = useState("");
-  const [ingQTY, setIngQTY] = useState("");
+  const [ingQTY, setIngQTY] = useState();
   const [unit, setUnit] = useState("");
   const [alert, setAlert] = useState(false);
+
+  const [emojis, setEmojis] = useState([]);
+  const [emjIcon, setEmjIcon] = useState("");
 
   // actionsheet state
   const { isOpen, onOpen, onClose } = useDisclose();
 
   const isEisEmptyOrSpaces = (input) => {
     return input.toString() === null || input.toString().match(/^ *$/) !== null;
+  };
+
+  useEffect(() => {
+    fetch(
+      "https://emoji-api.com/categories/food-drink?access_key=b6370aa8fa0cae5f52f26ff86be122de40169e6d"
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setEmojis(result);
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          setError(error);
+        }
+      );
+  }, []);
+
+  const getEmjIcon = (ingName) => {
+    console.log("it runs");
+    ingName = ingName.toLowerCase();
+    const found = emojis.filter((data) => {
+      // console.log(data.slug.match(`\\b${ingName}\\b`));
+      var matchRes = data.slug.match(`\\b${ingName}\\b`);
+      console.log(matchRes);
+      return data.slug == matchRes ? matchRes[0] : null;
+    });
+    console.log(found);
+    if (found.length) {
+      return found[0].character;
+    }
   };
 
   // add new ingredient into shoplist
@@ -45,7 +81,7 @@ const Shoppinglist = () => {
       const newIngredient = { id, ...ingredient, accquired: false };
       setshopList([...shopList, newIngredient]);
       setIngName("");
-      setIngQTY("");
+      setIngQTY();
       setUnit("");
       console.log(shopList);
     } else {
@@ -94,6 +130,7 @@ const Shoppinglist = () => {
                   ingredientName: ingName,
                   ingredientQTY: ingQTY,
                   ingredientUnit: unit,
+                  ingredientIcon: getEmjIcon(ingName),
                 });
               }}
             />
@@ -116,7 +153,7 @@ const Shoppinglist = () => {
                   placeholder="QTY"
                   value={ingQTY}
                   keyboardType="decimal-pad"
-                  onChangeText={(v) => setIngQTY(parseInt(v))}
+                  onChangeText={(v) => setIngQTY(v)}
                 />
               </FormControl>
 
@@ -147,7 +184,7 @@ const Shoppinglist = () => {
       {shopList.length > 0 ? (
         // pass function props into shopList component
         <Ingredients
-          ingredients={[...shopList]}
+          ingredients={shopList}
           onFinish={finishIngredient}
           onDelete={deleteIngredient}
           a="a"

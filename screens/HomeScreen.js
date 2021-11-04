@@ -8,6 +8,7 @@ import {
   VStack,
   Flex,
   Heading,
+  ScrollView,
   Text,
   View,
 } from "native-base";
@@ -41,20 +42,22 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView>
-      <Box mt={3} mx={5}>
-        <Flex direction="row" justifyContent="space-between" flexWrap="wrap">
-          <Heading>Hi, {auth.currentUser?.email}</Heading>
-          <TouchableOpacity onPress={handleSignOut}>
-            <Circle size={36} bg="secondary.400">
-              <Ionicons name="log-out-outline" size={24} color="white" />
-            </Circle>
-          </TouchableOpacity>
-        </Flex>
-        <ShoppingList />
-        {/* <TouchableOpacity onPress={addList}>
+      <ScrollView>
+        <Box mt={3} mx={5} pb={20}>
+          <Flex direction="row" justifyContent="space-between" flexWrap="wrap">
+            <Heading>Hi, {auth.currentUser?.email}</Heading>
+            <TouchableOpacity onPress={handleSignOut}>
+              <Circle size={36} bg="secondary.400">
+                <Ionicons name="log-out-outline" size={24} color="white" />
+              </Circle>
+            </TouchableOpacity>
+          </Flex>
+          <ShoppingList />
+          {/* <TouchableOpacity onPress={addList}>
           <Text>Create a new Shopping List</Text>
         </TouchableOpacity> */}
-      </Box>
+        </Box>
+      </ScrollView>
     </SafeAreaView>
   );
 };
