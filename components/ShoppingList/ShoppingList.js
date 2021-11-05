@@ -23,7 +23,7 @@ import Data from "../../data.json";
 import Ingredients from "./Ingredients/Ingredients";
 
 const Shoppinglist = () => {
-  const [shopList, setshopList] = useState([...Data["shopList"]]);
+  const [shopList, setShopList] = useState([...Data["shopList"]]);
   const [ingName, setIngName] = useState("");
   const [ingQTY, setIngQTY] = useState();
   const [unit, setUnit] = useState("");
@@ -35,13 +35,9 @@ const Shoppinglist = () => {
   // actionsheet state
   const { isOpen, onOpen, onClose } = useDisclose();
 
-  const isEisEmptyOrSpaces = (input) => {
-    return input.toString() === null || input.toString().match(/^ *$/) !== null;
-  };
-
   useEffect(() => {
     fetch(
-      "https://emoji-api.com/categories/food-drink?access_key=b6370aa8fa0cae5f52f26ff86be122de40169e6d"
+      "https://emoji-api.com/categories/food-drink?access_key=716a1b2db883f658674ad95754873abc0e727ab0"
     )
       .then((res) => res.json())
       .then(
@@ -51,9 +47,7 @@ const Shoppinglist = () => {
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        (error) => {
-          setError(error);
-        }
+        (error) => {}
       );
   }, []);
 
@@ -72,14 +66,23 @@ const Shoppinglist = () => {
     }
   };
 
+  const isEisEmptyOrSpaces = (input) => {
+    return input.toString() === null || input.toString().match(/^ *$/) !== null;
+  };
+
   // add new ingredient into shoplist
   const addIngredient = (ingredient) => {
-    if (!isEisEmptyOrSpaces(ingName) && !isEisEmptyOrSpaces(ingQTY)) {
+    if (
+      ingName &&
+      ingQTY &&
+      !isEisEmptyOrSpaces(ingName) &&
+      !isEisEmptyOrSpaces(ingQTY)
+    ) {
       const id = shopList.length !== 0 ? shopList.slice(-1)[0].id + 1 : 0;
       // auto incerased ID id is the new ID for newTask, id = lastestId + 1 OR 0
       // When task list is not empty, read the id of last object in the list then + 1; else assign with 0
       const newIngredient = { id, ...ingredient, accquired: false };
-      setshopList([...shopList, newIngredient]);
+      setShopList([...shopList, newIngredient]);
       setIngName("");
       setIngQTY();
       setUnit("");
@@ -91,13 +94,13 @@ const Shoppinglist = () => {
 
   // delete ingredient from data
   const deleteIngredient = (id) => {
-    setshopList(shopList.filter((ingredient) => ingredient.id !== id));
+    setShopList(shopList.filter((ingredient) => ingredient.id !== id));
     console.log([...shopList]);
   };
 
   // finish ingredient, ingredient finished will be diasabled
   const finishIngredient = (id) => {
-    setshopList(
+    setShopList(
       shopList.map((ingredient) =>
         ingredient.id === id
           ? { ...ingredient, accquired: !ingredient.accquired }
@@ -143,7 +146,10 @@ const Shoppinglist = () => {
                 <Input
                   placeholder="ingredient name"
                   value={ingName}
-                  onChangeText={(v) => setIngName(v)}
+                  onChangeText={(v) => {
+                    setIngName(v);
+                    setAlert(false);
+                  }}
                 />
               </FormControl>
 
@@ -153,7 +159,10 @@ const Shoppinglist = () => {
                   placeholder="QTY"
                   value={ingQTY}
                   keyboardType="decimal-pad"
-                  onChangeText={(v) => setIngQTY(v)}
+                  onChangeText={(v) => {
+                    setIngQTY(v);
+                    setAlert(false);
+                  }}
                 />
               </FormControl>
 
@@ -166,7 +175,10 @@ const Shoppinglist = () => {
                   _selectedItem={{
                     bg: "teal.100",
                   }}
-                  onValueChange={(itemValue) => setUnit(itemValue)}
+                  onValueChange={(itemValue) => {
+                    setUnit(itemValue);
+                    setAlert(false);
+                  }}
                 >
                   <Select.Item label=" — " value="" fontSize="16" />
                   <Select.Item label="Bottle" value="bottle" fontSize="16" />
@@ -190,7 +202,7 @@ const Shoppinglist = () => {
           a="a"
         />
       ) : (
-        "🛒 is empty, click + to add new shopList"
+        <Text fontSize="xl">🛒 Nothing here, click + to add new item</Text>
       )}
     </VStack>
   );
