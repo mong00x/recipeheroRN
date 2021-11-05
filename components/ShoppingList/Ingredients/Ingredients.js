@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 
 import {
   Box,
+  Button,
   Checkbox,
   FlatList,
   Heading,
@@ -15,9 +16,11 @@ import {
   NativeBaseProvider,
 } from "native-base";
 
-const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
-  const [error, setError] = useState(null);
+import { TouchableOpacity } from "react-native";
 
+import { Ionicons } from "@expo/vector-icons";
+
+const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -38,12 +41,19 @@ const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
           <HStack space={3} justifyContent="space-between">
             <VStack>
               <HStack space={3}>
+                {ingredient.accquired ? (
+                  <TouchableOpacity onPress={() => onFinish(ingredient.id)}>
+                    <Ionicons name="checkbox-outline" size={24} color="#333" />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={() => onFinish(ingredient.id)}>
+                    <Ionicons name="square-outline" size={24} color="#333" />
+                  </TouchableOpacity>
+                )}
                 <Heading>{ingredient.ingredientIcon}</Heading>
                 <Text
-                  _dark={{
-                    color: "warmGray.50",
-                  }}
-                  color="coolGray.800"
+                  strikeThrough={ingredient.accquired}
+                  color={!ingredient.accquired ? "#333" : "#999"}
                   fontSize="lg"
                   bold
                   w={100}
@@ -71,11 +81,12 @@ const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
                 </Text>
               </HStack>
             </VStack>
-            <Checkbox
-              value="test"
-              accessibilityLabel="This is a dummy checkbox"
-              size="lg"
-            />
+            {/* <HStack> */}
+
+            <TouchableOpacity onPress={() => onDelete(ingredient.id)}>
+              <Ionicons name="trash-outline" size={24} color="#ff4949" />
+            </TouchableOpacity>
+            {/* </HStack> */}
           </HStack>
         </Box>
       ))}
