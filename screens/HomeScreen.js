@@ -27,8 +27,6 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const user = auth.currentUser;
 
-  useEffect(() => {});
-
   const handleSignOut = () => {
     auth.signOut().then(() => {
       console.log(user.email, "Signed out");
@@ -45,7 +43,7 @@ const HomeScreen = () => {
       <ScrollView>
         <Box mt={3} mx={5} pb={20}>
           <Flex direction="row" justifyContent="space-between" flexWrap="wrap">
-            <Heading>Hi, {auth.currentUser?.email}</Heading>
+            <Heading>Good Day</Heading>
             <TouchableOpacity onPress={handleSignOut}>
               <Circle size={36} bg="secondary.400">
                 <Ionicons name="log-out-outline" size={24} color="white" />

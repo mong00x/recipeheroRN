@@ -25,6 +25,7 @@ const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
       {ingredients.map((ingredient) => (
         <Box
           key={ingredient.id}
+          borderTopWidth="1"
           borderBottomWidth="1"
           _dark={{
             borderColor: "gray.600",

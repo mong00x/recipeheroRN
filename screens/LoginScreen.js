@@ -10,9 +10,11 @@ import {
   Keyboard,
 } from "react-native";
 import {
+  Box,
   Center,
   Heading,
   KeyboardAvoidingView,
+  useToast,
   Text,
   Input,
   View,
@@ -32,6 +34,8 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+
+  const toast = useToast();
 
   // login listener, if logged in navigate to home screen
   useEffect(() => {
@@ -61,7 +65,16 @@ const LoginScreen = () => {
       .signInWithEmailAndPassword(email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user.email, "Logged in");
+        toast.show({
+          placement: "top",
+          render: () => {
+            return (
+              <Box bg="emerald.500" px="2" rounded="sm" mb={5} fontSize="16">
+                Hi {user.email}
+              </Box>
+            );
+          },
+        });
         navigation.navigate("Home");
       })
       .catch((error) => alert(error.message));
