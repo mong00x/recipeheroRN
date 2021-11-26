@@ -12,8 +12,10 @@ import {
   Text,
   View,
 } from "native-base";
-import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
+
 import { auth } from "../firebase";
 
 import { useNavigation } from "@react-navigation/core";
@@ -27,6 +29,7 @@ const HomeScreen = () => {
 
   const navigation = useNavigation();
   const Tab = createBottomTabNavigator();
+  const wh7_5 = Dimensions.get("window").height * 0.075;
 
   const user = auth.currentUser;
 
@@ -55,16 +58,40 @@ const HomeScreen = () => {
     //     </TouchableOpacity> */}
     //     </Box>
     //   </ScrollView>
-    <Tab.Navigator>
+    <Tab.Navigator
+      backBehavior="none"
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#e91e63",
+        tabBarStyle: {
+          zIndex: 99,
+          position: "absolute",
+          height: wh7_5,
+          paddingBottom: 10,
+        },
+      }}
+    >
       <Tab.Screen
         name="Shop List"
         component={ShoppingList}
-        options={{ headerShown: false }}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="cart-outline" color={color} size={24} />
+          ),
+        }}
       />
       <Tab.Screen
         name="Storage"
         component={Storage}
-        options={{ headerShown: false }}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="fridge-outline"
+              color={color}
+              size={24}
+            />
+          ),
+        }}
       />
     </Tab.Navigator>
   );

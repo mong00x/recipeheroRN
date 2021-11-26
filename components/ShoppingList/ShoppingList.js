@@ -17,7 +17,8 @@ import {
   Text,
 } from "native-base";
 
-import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
+import { FontAwesome5, Feather } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -39,6 +40,8 @@ const Shoppinglist = () => {
 
   // actionsheet state
   const { isOpen, onOpen, onClose } = useDisclose();
+
+  const wh82_5 = Dimensions.get("window").height * 0.825;
 
   // useEffect(() => {
   //   fetch(
@@ -138,17 +141,26 @@ const Shoppinglist = () => {
 
   return (
     <SafeAreaView>
-      <VStack space={2} mt={3} px={3}>
-        <Heading fontSize="28">Shopping List</Heading>
+      <VStack space={2} mt={3}>
+        <Heading px={3} fontSize="28">
+          Shopping List
+        </Heading>
         <Button
+          zIndex="99"
+          right="20px"
+          bottom="40px"
+          borderRadius="full"
           onPress={onOpen}
           position="absolute"
-          size="sm"
-          icon={<Icon color="white" as={<Feather name="plus" />} size="sm" />}
-        />
+          size="16"
+          bg="white"
+          shadow="9"
+        >
+          <Icon color="black" as={<Feather name="plus" />} size="sm" />
+        </Button>
         {/* add button  */}
 
-        <ScrollView mt={3} pb={20} height="85vh">
+        <ScrollView mt={3} px={3} mb={10} height={wh82_5}>
           {shopList.length > 0 ? (
             // pass function props into shopList component
             <Ingredients
