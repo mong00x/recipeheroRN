@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import {
   Actionsheet,
   Box,
+  Button,
   Input,
   Select,
-  Fab,
+  ScrollView,
   FormControl,
   HStack,
   Heading,
@@ -18,7 +19,11 @@ import {
 
 import { FontAwesome5, Feather, Entypo } from "@expo/vector-icons";
 
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import Data from "../../data.json";
+// const { EmojiService } = require("m3o/emoji");
+import { EmojiService } from "m3o/emoji";
 
 import Ingredients from "./Ingredients/Ingredients";
 
@@ -30,41 +35,58 @@ const Shoppinglist = () => {
   const [alert, setAlert] = useState(false);
 
   const [emojis, setEmojis] = useState([]);
-  const [emjIcon, setEmjIcon] = useState("");
+  const [emojiIcon, setEmojiIcon] = useState("");
 
   // actionsheet state
   const { isOpen, onOpen, onClose } = useDisclose();
 
-  useEffect(() => {
-    fetch(
-      "https://emoji-api.com/categories/food-drink?access_key=716a1b2db883f658674ad95754873abc0e727ab0"
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setEmojis(result);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {}
-      );
-  }, []);
+  // useEffect(() => {
+  //   fetch(
+  //     "https://emoji-api.com/categories/food-drink?access_key=716a1b2db883f658674ad95754873abc0e727ab0"
+  //   )
+  //     .then((res) => res.json())
+  //     .then(
+  //       (result) => {
+  //         setEmojis(result);
+  //       },
+  //       // Note: it's important to handle errors here
+  //       // instead of a catch() block so that we don't swallow
+  //       // exceptions from actual bugs in components.
+  //       (error) => {}
+  //     );
+  // }, []);
+  const emojiService = new EmojiService(
+    "Njc5ZGMyYzYtNzBlNC00MTBjLTkxMmMtNmU1MzQ0OTZiMTQx"
+  );
 
-  const getEmjIcon = (ingName) => {
-    console.log("it runs");
-    ingName = ingName.toLowerCase();
-    const found = emojis.filter((data) => {
-      // console.log(data.slug.match(`\\b${ingName}\\b`));
-      var matchRes = data.slug.match(`\\b${ingName}\\b`);
-      console.log(matchRes);
-      return data.slug == matchRes ? matchRes[0] : null;
-    });
-    console.log(found);
-    if (found.length) {
-      return found[0].character;
+  const findEmoji = async (name) => {
+    name = name.toLowerCase();
+
+    const rsp = await emojiService
+      .find({
+        alias: ":" + name + ":",
+      })
+      .catch(() => {
+        return "";
+      });
+    if (await rsp.emoji) {
+      return await rsp.emoji;
     }
   };
+
+  // const getEmojIcon = (ingName) => {
+  //   console.log("it runs");
+  //   const found = emojis.filter((data) => {
+  //     // console.log(data.slug.match(`\\b${ingName}\\b`));
+  //     var matchRes = data.slug.match(`\\b${ingName}\\b`);
+  //     console.log(matchRes);
+  //     return data.slug == matchRes ? matchRes[0] : null;
+  //   });
+  //   console.log(found);
+  //   if (found.length) {
+  //     return found[0].character;
+  //   }
+  // };
 
   const isEisEmptyOrSpaces = (input) => {
     return input.toString() === null || input.toString().match(/^ *$/) !== null;
@@ -82,9 +104,14 @@ const Shoppinglist = () => {
       // auto incerased ID id is the new ID for newTask, id = lastestId + 1 OR 0
       // When task list is not empty, read the id of last object in the list then + 1; else assign with 0
       const newIngredient = { id, ...ingredient, accquired: false };
-      setShopList([...shopList, newIngredient]);
+      findEmoji(ingredient.ingredientName).then((res) => {
+        newIngredient.ingredientIcon = res;
+        setShopList([...shopList, newIngredient]);
+      });
+      console.log(newIngredient);
+      setEmojiIcon("");
       setIngName("");
-      setIngQTY();
+      setIngQTY("");
       setUnit("");
       console.log(shopList);
     } else {
@@ -110,15 +137,31 @@ const Shoppinglist = () => {
   };
 
   return (
-    <VStack space={2} mt={3}>
-      <Heading fontSize="28">Shopping List</Heading>
-      <Fab
-        onPress={onOpen}
-        position="absolute"
-        size="sm"
-        icon={<Icon color="white" as={<Feather name="plus" />} size="sm" />}
-      />
+    <SafeAreaView>
+      <VStack space={2} mt={3} px={3}>
+        <Heading fontSize="28">Shopping List</Heading>
+        <Button
+          onPress={onOpen}
+          position="absolute"
+          size="sm"
+          icon={<Icon color="white" as={<Feather name="plus" />} size="sm" />}
+        />
+        {/* add button  */}
 
+        <ScrollView mt={3} pb={20} height="85vh">
+          {shopList.length > 0 ? (
+            // pass function props into shopList component
+            <Ingredients
+              ingredients={shopList}
+              onFinish={finishIngredient}
+              onDelete={deleteIngredient}
+              a="a"
+            />
+          ) : (
+            <Text fontSize="xl">🛒 Nothing here, click + to add new item</Text>
+          )}
+        </ScrollView>
+      </VStack>
       <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
         <Actionsheet.Content>
           <Box w="100%" px={4}>
@@ -133,7 +176,6 @@ const Shoppinglist = () => {
                   ingredientName: ingName,
                   ingredientQTY: ingQTY,
                   ingredientUnit: unit,
-                  ingredientIcon: getEmjIcon(ingName),
                 });
               }}
             />
@@ -193,18 +235,7 @@ const Shoppinglist = () => {
           </Box>
         </Actionsheet.Content>
       </Actionsheet>
-      {shopList.length > 0 ? (
-        // pass function props into shopList component
-        <Ingredients
-          ingredients={shopList}
-          onFinish={finishIngredient}
-          onDelete={deleteIngredient}
-          a="a"
-        />
-      ) : (
-        <Text fontSize="xl">🛒 Nothing here, click + to add new item</Text>
-      )}
-    </VStack>
+    </SafeAreaView>
   );
 };
 

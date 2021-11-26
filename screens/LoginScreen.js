@@ -98,10 +98,12 @@ const LoginScreen = () => {
               <Text>Please login or sign up</Text>
               <View>
                 <Input
-                  placeholder="Email"
                   mt="5"
+                  placeholder="E-mail"
                   value={email}
                   onChangeText={(text) => setEmail(text)}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
                 />
                 <Input
                   placeholder="Password"

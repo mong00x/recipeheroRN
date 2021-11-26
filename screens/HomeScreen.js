@@ -12,19 +12,22 @@ import {
   Text,
   View,
 } from "native-base";
-
+import { Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
 
 import { useNavigation } from "@react-navigation/core";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import ShoppingList from "../components/ShoppingList/ShoppingList";
+import Storage from "../components/Storage/Storage";
 
 const HomeScreen = () => {
-  const [shopList, setShopList] = useState(null);
+  const [tab, setTab] = useState("ShopList");
 
   const navigation = useNavigation();
+  const Tab = createBottomTabNavigator();
+
   const user = auth.currentUser;
 
   const handleSignOut = () => {
@@ -34,29 +37,36 @@ const HomeScreen = () => {
     });
   };
 
-  const addList = () => {
-    navigation.replace("ShopList");
-  };
-
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <Box mt={3} mx={5} pb={20}>
-          <Flex direction="row" justifyContent="space-between" flexWrap="wrap">
-            <Heading>Good Day</Heading>
-            <TouchableOpacity onPress={handleSignOut}>
-              <Circle size={36} bg="secondary.400">
-                <Ionicons name="log-out-outline" size={24} color="white" />
-              </Circle>
-            </TouchableOpacity>
-          </Flex>
-          <ShoppingList />
-          {/* <TouchableOpacity onPress={addList}>
-          <Text>Create a new Shopping List</Text>
-        </TouchableOpacity> */}
-        </Box>
-      </ScrollView>
-    </SafeAreaView>
+    // <SafeAreaView>
+    //
+    //
+    //       <Flex direction="row" justifyContent="space-between" flexWrap="wrap">
+    //         <Heading>Good Day</Heading>
+    //         <TouchableOpacity onPress={handleSignOut}>
+    //           <Circle size={36} bg="secondary.400">
+    //             <Ionicons name="log-out-outline" size={24} color="white" />
+    //           </Circle>
+    //         </TouchableOpacity>
+    //       </Flex>
+
+    //       {/* <TouchableOpacity onPress={addList}>
+    //       <Text>Create a new Shopping List</Text>
+    //     </TouchableOpacity> */}
+    //     </Box>
+    //   </ScrollView>
+    <Tab.Navigator>
+      <Tab.Screen
+        name="Shop List"
+        component={ShoppingList}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Storage"
+        component={Storage}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
   );
 };
 
