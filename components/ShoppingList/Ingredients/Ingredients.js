@@ -20,16 +20,15 @@ import { TouchableOpacity } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
-const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
+const Ingredients = ({ ingredients, onDelete, onFinish }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <Box>
+    <Box flexDir="column-reverse">
       {ingredients.map((ingredient) => (
         <Box
           key={ingredient.id}
           borderTopWidth="1"
-          borderBottomWidth="1"
           _dark={{
             borderColor: "gray.600",
           }}
@@ -42,7 +41,10 @@ const Ingredients = ({ ingredients, onDelete, onFinish, a }) => {
             <VStack>
               <HStack space={3}>
                 {ingredient.accquired ? (
-                  <TouchableOpacity onPress={() => onFinish(ingredient.id)}>
+                  <TouchableOpacity
+                    onPress={() => onFinish(ingredient.id)}
+                    disabled="true"
+                  >
                     <Ionicons name="checkbox-outline" size={24} color="#333" />
                   </TouchableOpacity>
                 ) : (

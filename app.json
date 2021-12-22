@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "recipeheroRN",
-    "slug": "recipeheroRN",
+    "name": "Food Keeper",
+    "slug": "food-keeper",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "v0.1"
+    "description": "v1.0"
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   Actionsheet,
@@ -18,18 +18,28 @@ import {
 } from "native-base";
 
 import { FontAwesome5, Feather } from "@expo/vector-icons";
-import { Dimensions } from "react-native";
+import { Dimensions, TouchableOpacity } from "react-native";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import Data from "../../data.json";
+// import Context as data
+
 // const { EmojiService } = require("m3o/emoji");
 import { EmojiService } from "m3o/emoji";
 
 import Ingredients from "./Ingredients/Ingredients";
 
-const Shoppinglist = () => {
-  const [shopList, setShopList] = useState([...Data["shopList"]]);
+const Shoppinglist = ({
+  Data,
+  setData,
+  shopList,
+  setShopList,
+  storage,
+  setStorage,
+}) => {
+  console.log(storage);
+
+  // const [storage, setStorage] = useState(Data.storage);
   const [ingName, setIngName] = useState("");
   const [ingQTY, setIngQTY] = useState();
   const [unit, setUnit] = useState("");
@@ -43,21 +53,6 @@ const Shoppinglist = () => {
 
   const wh82_5 = Dimensions.get("window").height * 0.825;
 
-  // useEffect(() => {
-  //   fetch(
-  //     "https://emoji-api.com/categories/food-drink?access_key=716a1b2db883f658674ad95754873abc0e727ab0"
-  //   )
-  //     .then((res) => res.json())
-  //     .then(
-  //       (result) => {
-  //         setEmojis(result);
-  //       },
-  //       // Note: it's important to handle errors here
-  //       // instead of a catch() block so that we don't swallow
-  //       // exceptions from actual bugs in components.
-  //       (error) => {}
-  //     );
-  // }, []);
   const emojiService = new EmojiService(
     "Njc5ZGMyYzYtNzBlNC00MTBjLTkxMmMtNmU1MzQ0OTZiMTQx"
   );
@@ -74,24 +69,12 @@ const Shoppinglist = () => {
       });
     if (await rsp.emoji) {
       return await rsp.emoji;
+    } else {
+      return await "🤷";
     }
   };
 
-  // const getEmojIcon = (ingName) => {
-  //   console.log("it runs");
-  //   const found = emojis.filter((data) => {
-  //     // console.log(data.slug.match(`\\b${ingName}\\b`));
-  //     var matchRes = data.slug.match(`\\b${ingName}\\b`);
-  //     console.log(matchRes);
-  //     return data.slug == matchRes ? matchRes[0] : null;
-  //   });
-  //   console.log(found);
-  //   if (found.length) {
-  //     return found[0].character;
-  //   }
-  // };
-
-  const isEisEmptyOrSpaces = (input) => {
+  const isEmptyOrSpaces = (input) => {
     return input.toString() === null || input.toString().match(/^ *$/) !== null;
   };
 
@@ -100,9 +83,12 @@ const Shoppinglist = () => {
     if (
       ingName &&
       ingQTY &&
-      !isEisEmptyOrSpaces(ingName) &&
-      !isEisEmptyOrSpaces(ingQTY)
+      !isEmptyOrSpaces(ingName) &&
+      !isEmptyOrSpaces(ingQTY)
     ) {
+      if (ingName.slice(-1) === " ") {
+        ingredient.ingredientName = ingName.slice(0, -1);
+      }
       const id = shopList.length !== 0 ? shopList.slice(-1)[0].id + 1 : 0;
       // auto incerased ID id is the new ID for newTask, id = lastestId + 1 OR 0
       // When task list is not empty, read the id of last object in the list then + 1; else assign with 0
@@ -111,78 +97,88 @@ const Shoppinglist = () => {
         newIngredient.ingredientIcon = res;
         setShopList([...shopList, newIngredient]);
       });
-      console.log(newIngredient);
+      // console.log(newIngredient);
       setEmojiIcon("");
       setIngName("");
       setIngQTY("");
       setUnit("");
-      console.log(shopList);
     } else {
       setAlert(true);
     }
+    setData({ shopList, storage });
   };
 
   // delete ingredient from data
   const deleteIngredient = (id) => {
     setShopList(shopList.filter((ingredient) => ingredient.id !== id));
-    console.log([...shopList]);
   };
 
   // finish ingredient, ingredient finished will be diasabled
+  // what have I done...............
   const finishIngredient = (id) => {
+    //
     setShopList(
       shopList.map((ingredient) =>
-        ingredient.id === id
-          ? { ...ingredient, accquired: !ingredient.accquired }
-          : ingredient
+        ingredient.id === id ? { ...ingredient, accquired: true } : ingredient
       )
     );
+    const newStorageIng = shopList.filter((ingredient) => ingredient.id === id);
+    // console.log(storage);
+    newStorageIng[0].id =
+      storage.length !== 0 ? storage.slice(-1)[0].id + 1 : 0;
+    newStorageIng[0].expiration = 7;
+    // console.log(...newStorageIng);
+
+    setStorage([...storage, ...newStorageIng]);
+    // console.log(storage);
   };
 
+  // // useEffect to update to Context everytime rerender
+  // useEffect(() => {
+  //   // console.log("useEffect triggered");
+  //   setData({
+  //     shopList: [...shopList],
+  //     storage: [...storage],
+  //   });
+  //   // console.log(Data);
+  // }, [shopList, storage]);
+
   return (
-    <SafeAreaView>
+    <Box>
       <VStack space={2} mt={3}>
         <Heading px={3} fontSize="28">
           Shopping List
         </Heading>
-        <Button
-          zIndex="99"
-          right="20px"
-          bottom="40px"
-          borderRadius="full"
-          onPress={onOpen}
-          position="absolute"
-          size="16"
-          bg="white"
-          shadow="9"
-        >
-          <Icon color="black" as={<Feather name="plus" />} size="sm" />
-        </Button>
-        {/* add button  */}
 
-        <ScrollView mt={3} px={3} mb={10} height={wh82_5}>
+        <ScrollView px={3} height="90%">
           {shopList.length > 0 ? (
             // pass function props into shopList component
             <Ingredients
               ingredients={shopList}
               onFinish={finishIngredient}
               onDelete={deleteIngredient}
-              a="a"
             />
           ) : (
-            <Text fontSize="xl">🛒 Nothing here, click + to add new item</Text>
+            <Text fontSize="xl">
+              🛒 Nothing here, click + to add a new item
+            </Text>
           )}
+          <Box height="20" bottom="0">
+            {" "}
+          </Box>
         </ScrollView>
       </VStack>
-      <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
+      <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
           <Box w="100%" px={4}>
-            <IconButton
+            <Button
+              zIndex="99"
+              w={8}
+              h={8}
               position="absolute"
               right="4"
               borderRadius="sm"
               variant="solid"
-              icon={<Icon as={Feather} name="plus" color="warmGray.50" />}
               onPress={() => {
                 addIngredient({
                   ingredientName: ingName,
@@ -190,7 +186,9 @@ const Shoppinglist = () => {
                   ingredientUnit: unit,
                 });
               }}
-            />
+            >
+              <Icon as={Feather} name="plus" color="warmGray.50" />
+            </Button>
 
             <Heading>+ Add item</Heading>
 
@@ -208,7 +206,7 @@ const Shoppinglist = () => {
               </FormControl>
 
               <FormControl w={20}>
-                <FormControl.Label>qty.</FormControl.Label>
+                <FormControl.Label>Quantity</FormControl.Label>
                 <Input
                   placeholder="QTY"
                   value={ingQTY}
@@ -247,7 +245,22 @@ const Shoppinglist = () => {
           </Box>
         </Actionsheet.Content>
       </Actionsheet>
-    </SafeAreaView>
+      <Button
+        zIndex="99"
+        right="6%"
+        top="84%"
+        borderRadius="full"
+        onPress={onOpen}
+        position="absolute"
+        width="48px"
+        height="48px"
+        bg="white"
+        shadow="9"
+      >
+        <Icon color="black" as={<Feather name="plus" />} size="sm" />
+      </Button>
+      {/* add button  */}
+    </Box>
   );
 };
 

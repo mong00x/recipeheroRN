@@ -93,7 +93,7 @@ const LoginScreen = () => {
           >
             <VStack p="6" flex="1" justifyContent="flex-end">
               <Heading fontSize={36} mb="3">
-                Welcome to Recipe Hero 🥬
+                Welcome to Food Keeper 🥬
               </Heading>
               <Text>Please login or sign up</Text>
               <View>

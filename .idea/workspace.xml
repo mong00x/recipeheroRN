@@ -2,7 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="203cc10f-15b0-4d71-b917-187cf06b4f5c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ShoppingList/Ingredients/Ingredients.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/ShoppingList/Ingredients/Ingredients.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ShoppingList/ShoppingList.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/ShoppingList/ShoppingList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/Storage/Storage.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/Storage/Storage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/data.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/infrastructure/navigation/app.navigator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/HomeScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/HomeScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +32,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -35,9 +48,23 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="310" y="1533" width="1350" height="678" key="AVDManager" timestamp="1637193467239">
-      <screen x="217" y="1440" width="1536" height="864" />
+    <state x="335" y="89" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1638495749845">
+      <screen x="62" y="0" width="1986" height="1152" />
+    </state>
+    <state x="335" y="89" key="#com.intellij.execution.impl.EditConfigurationsDialog/62.0.1986.1152/292.1440.1461.864@62.0.1986.1152" timestamp="1638495749845" />
+    <state x="182" y="124" width="1747" height="904" key="AVDManager" timestamp="1638500044016">
+      <screen x="62" y="0" width="1986" height="1152" />
     </state>
     <state x="310" y="1533" width="1350" height="678" key="AVDManager/0.0.2048.1152/217.1440.1536.864@217.1440.1536.864" timestamp="1637193467239" />
+    <state x="151" y="93" width="1296" height="678" key="AVDManager/62.0.1474.864@62.0.1474.864" timestamp="1638408652680" />
+    <state x="182" y="124" width="1747" height="904" key="AVDManager/62.0.1986.1152/292.1440.1461.864@62.0.1986.1152" timestamp="1638500044016" />
+    <state x="389" y="79" key="SettingsEditor" timestamp="1638499057405">
+      <screen x="62" y="0" width="1986" height="1152" />
+    </state>
+    <state x="389" y="79" key="SettingsEditor/62.0.1986.1152/292.1440.1461.864@62.0.1986.1152" timestamp="1638499057405" />
+    <state x="543" y="188" width="672" height="678" key="search.everywhere.popup" timestamp="1638495758923">
+      <screen x="62" y="0" width="1986" height="1152" />
+    </state>
+    <state x="543" y="188" width="672" height="678" key="search.everywhere.popup/62.0.1986.1152/292.1440.1461.864@62.0.1986.1152" timestamp="1638495758923" />
   </component>
 </project>
