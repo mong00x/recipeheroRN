@@ -15,4 +15,4 @@ expo start
 
 You have to choose which platform to run the app on.
 
-Enoy :D
+Enjoy :D
