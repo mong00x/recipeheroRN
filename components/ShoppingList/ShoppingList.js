@@ -54,7 +54,7 @@ const Shoppinglist = ({
   const wh82_5 = Dimensions.get("window").height * 0.825;
 
   const emojiService = new EmojiService(
-    "Njc5ZGMyYzYtNzBlNC00MTBjLTkxMmMtNmU1MzQ0OTZiMTQx"
+    "ZDE1Yjk3YTQtMjg1Yi00ZjIzLThkNTAtMzcyNjI3YTNkYzgy"
   );
 
   const findEmoji = async (name) => {
